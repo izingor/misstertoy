@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-// const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const toyService = require('./services/toy.service');
@@ -25,7 +24,9 @@ app.get('/api/toy', (req, res) => {
     toyService.query()
         .then(toys => {
             res.send(toys);
-        });
+        }).catch(err => { 
+            res.send('problem getting toys' , err)
+        })
 });
 
 app.put('/api/toy/', (req, res) => {
@@ -46,7 +47,9 @@ app.put('/api/toy/', (req, res) => {
         .then((savedtoy) => {
             res.send(savedtoy);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            res.send('Problem with updating toy', err)
+        });
 });
 
 app.post('/api/toy', (req, res) => {
@@ -63,7 +66,9 @@ app.post('/api/toy', (req, res) => {
     toyService.save(toy)
         .then((savedtoy) => {
             res.send(savedtoy);
-        });
+        }).catch(err => {
+            res.send('Problem with saving toy', err)
+        })
 });
 
 
@@ -77,7 +82,6 @@ app.get('/api/toy/:toyId', (req, res) => {
 });
 
 app.delete('/api/toy/:toyId', (req, res) => {
-    // const { activeUser } = req.session;
     console.log('Backend removing toy:', req.params.toyId);
     toyService.remove(req.params.toyId)
         .then(() => {
@@ -89,8 +93,7 @@ app.delete('/api/toy/:toyId', (req, res) => {
 });
 
 
-// app.listen(3030,
-//     () => console.log('Server listening on port 3030'));
+
 app.listen(port, () => {
     console.log(`App listening on port ${port}!`);
 });
